@@ -11,12 +11,17 @@ def toWound(s,t):
 
 class Unit:
 
-    def __init__(self, models, toughness, save, wounds):
+    created = 0
+
+    def __init__(self, name, models, toughness, save, wounds):
         self.models = models
         self.toughness = toughness
         self.save = save
         self.wounds = wounds
         self.allocated = wounds
+        self.name = name
+        Unit.created+=1
+        self.number = Unit.created
 
     def ranged(self, weapon, victim, **kwargs):
         attacks = self.models*weapon.attacks
@@ -72,7 +77,7 @@ class Unit:
                 self.allocated = self.wounds
 
     def __str__(self):
-        return str(self.models)
+        return str(self.number)+" "+self.name+" "+str(self.models)
 
 class Weapon:
 
@@ -115,7 +120,7 @@ while imp != "quit":
             id = int(m[0])
             break
     print(a)
-    z += [Unit(amount, int(m[4]), int(m[5][:-1]), int(m[8])) ]
+    z += [Unit(imp[:space].lower(), amount, int(m[4]), int(m[5][:-1]), int(m[8])) ]
     for w in y:
         if w[0] == id:
             print(w)

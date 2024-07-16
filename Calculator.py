@@ -1,21 +1,5 @@
 import random as r
 
-'''def roll(n, lookingFor):
-    counter = 0
-    counter6 = 0
-    print(lookingFor, end=": ")
-    for i in range(0,n):
-        x = r.randint(1,6)
-        print(x, end=" ")
-        if x == 6:
-            counter6+=1
-            counter+=1
-        elif x >= lookingFor:
-            counter+=1
-    print()
-        
-    return [counter, counter6]'''
-
 def toWound(s,t):
     if s >= t*2:
         return 2
@@ -35,22 +19,6 @@ class Unit:
         self.save = save
         self.wounds = wounds
         self.allocated = wounds
-
-    '''def melee(self, weapon, victim):
-        a = roll(self.models*weapon.attacks, weapon.BWS)
-        
-        if weapon.lethalHits:
-            b = roll(a[0]-a[1], toWound(weapon.strength, victim.toughness))
-        else:
-            b = roll(a[0], toWound(weapon.strength, victim.toughness))
-        if weapon.lethalHits:
-            c = roll(b[0]+a[1], victim.save+weapon.AP)
-        else:
-            c = roll(b[0], victim.save+weapon.AP)
-        if weapon.lethalHits:
-            victim.allocate(weapon.damage, a[1]+b[0]-c[0])
-        else:
-            victim.allocate(weapon.damage, b[0]-c[0])'''
     
     def ranged(self, weapon, victim, **kwargs):
         attacks = self.models*weapon.attacks
