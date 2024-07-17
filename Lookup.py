@@ -110,21 +110,33 @@ with open("./Data/Necron Weapons.csv", "r", encoding="utf8") as f:
 z = []
 imp = input("> ")
 while imp != "quit":
-    space = imp.rfind(" ")
-    amount = int(imp[space+1:])
-    a = "could not find what youre looking for"
-    id = -1
-    for m in x:
-        if m[2].upper() == imp[:space].upper():
-            a = m
-            id = int(m[0])
-            break
-    print(a)
-    z += [Unit(imp[:space].lower(), amount, int(m[4]), int(m[5][:-1]), int(m[8])) ]
-    for w in y:
-        if w[0] == id:
-            print(w)
+    space = imp.find(" ")
+    if imp[:space].upper() == "CREATE":
+        imp = imp[space+1:]
+        spacer = imp.rfind(" ")
+        amount = int(imp[spacer+1:])
+        a = "could not find what youre looking for"
+        id = -1
+        for m in x:
+            if m[2].upper() == imp[:spacer].upper():
+                a = m
+                id = int(m[0])
+                break
+        print(a)
+        for w in y:
+            if w[0] == id:
+                print(w)
+        
+        
+
+        z += [Unit(imp[:spacer].lower(), amount, int(m[4]), int(m[5][:-1]), int(m[8])) ]
+        
+    elif imp[:space].upper() == "ATTACK":
+        imp = imp[space+1:]
+        print("attack!!!")
+    else:
+        print("could not understand command")
     imp = input("> ")
 
-    for i in z:
-        print(i)
+for i in z:
+    print(i)
