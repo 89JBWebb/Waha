@@ -1,3 +1,5 @@
+import random as r
+
 def toWound(s,t):
     if s >= t*2:
         return 2
@@ -13,8 +15,10 @@ class Unit:
 
     created = 0
 
-    def __init__(self, name, models, toughness, save, wounds):
+    def __init__(self, name, models, rangedWeapons, meleeWeapons, toughness, save, wounds):
         self.models = models
+        self.rangedWeapons = rangedWeapons
+        self.meleeWeapons = meleeWeapons
         self.toughness = toughness
         self.save = save
         self.wounds = wounds
@@ -23,7 +27,11 @@ class Unit:
         Unit.created+=1
         self.number = Unit.created
 
-    def ranged(self, weapon, victim, **kwargs):
+    def ranged(self, victim, **kwargs):
+        for w in self.rangedWeapons:
+            self.rangedHelper(self, w, victim, kwargs)
+
+    def rangedHelper(self, weapon, victim, kwargs):
         attacks = self.models*weapon.attacks
         hits = 0
         wounds = 0
@@ -54,7 +62,6 @@ class Unit:
                 wounds+=1
         if "verbose" in kwargs:
             print()
-        
         if "verbose" in kwargs:
             print(victim.save-weapon.AP, end=": ")
         for i in range(wounds):
@@ -97,17 +104,17 @@ class Weapon:
             self.sustainedHits = kwargs["sustainedHits"]
 
 
-x = []
-y = []
+modelSheets = []
+weaponSheets = []
 with open("./Data/Necron Models.csv", "r", encoding="utf8") as f:
     for l in f.readlines():
-        x+=[l.split(",")]
+        modelSheets+=[l.split(",")]
 with open("./Data/Necron Weapons.csv", "r", encoding="utf8") as f:
     for l in f.readlines():
-        y+=[l.split(",")]
-        y[-1][0] = int(y[-1][0])
+        weaponSheets+=[l.split(",")]
+        weaponSheets[-1][0] = int(weaponSheets[-1][0])
 
-z = []
+FieldedUnits = []
 imp = input("> ")
 while imp != "quit":
     space = imp.find(" ")
@@ -115,28 +122,44 @@ while imp != "quit":
         imp = imp[space+1:]
         spacer = imp.rfind(" ")
         amount = int(imp[spacer+1:])
-        a = "could not find what youre looking for"
+        outputMessage = "could not find what youre looking for"
         id = -1
-        for m in x:
+        for m in modelSheets:
             if m[2].upper() == imp[:spacer].upper():
-                a = m
+                outputMessage = m
                 id = int(m[0])
                 break
-        print(a)
-        for w in y:
+        print(outputMessage)
+        
+        potentialWeapons = []
+        for w in weaponSheets:
             if w[0] == id:
+                potentialWeapons += [w]
                 print(w)
-        
-        
+        imp = input("Ranged> ")
+        rangedWeapons = imp.split()
+        rwh = []
+        for h in rangedWeapons:
+            i = potentialWeapons[int(h)]
+            rwh += [Weapon(int(i[6]), int(i[7]), int(i[8]), abs(int(i[9])), int(i[10]))]
 
-        z += [Unit(imp[:spacer].lower(), amount, int(m[4]), int(m[5][:-1]), int(m[8])) ]
+        imp = input("Melee> ")
+        meleeWeapons = imp.split()
+        mwh = []
+        for h in meleeWeapons:
+            i = potentialWeapons[int(h)-1]
+            mwh += [Weapon(int(i[6]), int(i[7]), int(i[8]), abs(int(i[9])), int(i[10]))]
+
+
+        FieldedUnits += [Unit(imp[:spacer].lower(), amount, rwh, mwh, int(m[4]), int(m[5][:-1]), int(m[8])) ]
         
     elif imp[:space].upper() == "ATTACK":
         imp = imp[space+1:]
+        
         print("attack!!!")
     else:
         print("could not understand command")
     imp = input("> ")
 
-for i in z:
+for i in FieldedUnits:
     print(i)
