@@ -141,23 +141,30 @@ while imp != "quit":
             if w[0] == id:
                 potentialWeapons += [w]
                 print(w)
+
         imp = input("Ranged> ")
+        while "E" in imp.upper():
+            print("please type a number")
+            imp = input("Ranged> ")
         rangedWeapons = imp.split()
         rwh = []
         for h in rangedWeapons:
             i = potentialWeapons[int(h)-1]
             print(i)
-            rwh += [Weapon(int(i[6]), int(i[7]), int(i[8]), abs(int(i[9])), int(i[10])), [i[3],i[4]]]
+            rwh += [Weapon(int(i[6]), int(i[7]), int(i[8]), abs(int(i[9])), int(i[10]), [i[3],i[4]])]
 
         imp = input("Melee> ")
+        while "E" in imp.upper():
+            print("please type a number")
+            imp = input("Ranged> ")
         meleeWeapons = imp.split()
         mwh = []
         for h in meleeWeapons:
             i = potentialWeapons[int(h)-1]
-            mwh += [Weapon(int(i[6]), int(i[7]), int(i[8]), abs(int(i[9])), int(i[10])), [i[3],i[4]]]
+            mwh += [Weapon(int(i[6]), int(i[7]), int(i[8]), abs(int(i[9])), int(i[10]), [i[3],i[4]])]
 
 
-        fieldedUnits += [Unit(unitName.lower(), amount, rwh, mwh, int(m[4]), int(m[5][:-1]), int(m[8])) ]
+        fieldedUnits += [Unit(unitName.lower(), amount, rwh, mwh, int(m[4]), int(m[5][:-1]), int(m[8]))]
         
     elif imp[:space].upper() == "RANGE":
         imp = imp[space+1:]
@@ -168,6 +175,10 @@ while imp != "quit":
         imp = imp[space+1:]
         si = imp.split()
         fieldedUnits[int(si[0])-1].melee(fieldedUnits[int(si[1])-1], verbose=True)
+
+    elif imp.upper() == "LIST":
+        for i in fieldedUnits:
+            print(i)
 
     else:
         print("could not understand command")
