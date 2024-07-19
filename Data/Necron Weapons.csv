@@ -21,11 +21,11 @@
 533,3,Tesla cannon,sustained hits 2,,Ranged,4,3,6,0,1,
 533,4,Overlord’s blade,devastating wounds,,Melee,4,2,8,-3,2,
 533,5,Staff of light,,,Melee,4,3,5,-2,1,
-534,1,Gauss flayer,lethal hits,rapid fire 1,24,Ranged,1,4,4,0,
+534,1,Gauss flayer,lethal hits,rapid fire 1,Ranged,1,4,4,0,1
 534,2,Gauss reaper,lethal hits,,Ranged,2,4,4,-1,1,
 534,3,Close combat weapon,,,Melee,1,4,4,0,1,
 535,1,Gauss blaster,lethal hits,,Ranged,2,3,5,-1,1,
-535,2,Tesla carbine,assault,sustained hits 2,24,Ranged,2,3,5,0,
+535,2,Tesla carbine,assault,sustained hits 2,24,Ranged,2,3,5,0,1
 535,3,Close combat weapon,,,Melee,2,3,4,0,1,
 536,1,Hyperphase sword,,,Melee,3,3,6,-2,1,
 536,2,Warscythe,devastating wounds,,Melee,2,3,8,-3,2,
@@ -46,7 +46,7 @@
 541,3,Scythe of the Nightbringer – sweep,,,Melee,14,2,8,-2,2,
 542,1,Cosmic insanity,anti-character 4+,devastating wounds,<a href=""/wh40k10ed/the-rules/core-rules/#Precision"">precision</a>",18,Ranged,6,2,6,
 542,2,Golden fists,,,Melee,8,2,8,-3,3,
-543,1,Gauss flayer array,lethal hits,rapid fire 5,24,Ranged,5,3,4,0,
+543,1,Gauss flayer array,lethal hits,rapid fire 5,24,Ranged,5,3,4,0,1
 543,2,Armoured bulk,,,Melee,3,4,6,0,1,
 544,1,Twin tesla destructor,sustained hits 2,twin-linked,36,Ranged,6,3,8,0,
 544,2,Armoured bulk,,,Melee,3,4,6,0,1,

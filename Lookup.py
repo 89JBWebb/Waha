@@ -29,7 +29,7 @@ class Unit:
 
     def ranged(self, victim, **kwargs):
         for w in self.rangedWeapons:
-            self.rangedHelper(self, w, victim, kwargs)
+            self.rangedHelper(w, victim, kwargs)
 
     def rangedHelper(self, weapon, victim, kwargs):
         attacks = self.models*weapon.attacks
@@ -114,7 +114,7 @@ with open("./Data/Necron Weapons.csv", "r", encoding="utf8") as f:
         weaponSheets+=[l.split(",")]
         weaponSheets[-1][0] = int(weaponSheets[-1][0])
 
-FieldedUnits = []
+fieldedUnits = []
 imp = input("> ")
 while imp != "quit":
     space = imp.find(" ")
@@ -124,6 +124,7 @@ while imp != "quit":
         amount = int(imp[spacer+1:])
         outputMessage = "could not find what youre looking for"
         id = -1
+        unitName = imp[:spacer]
         for m in modelSheets:
             if m[2].upper() == imp[:spacer].upper():
                 outputMessage = m
@@ -140,7 +141,8 @@ while imp != "quit":
         rangedWeapons = imp.split()
         rwh = []
         for h in rangedWeapons:
-            i = potentialWeapons[int(h)]
+            i = potentialWeapons[int(h)-1]
+            print(i)
             rwh += [Weapon(int(i[6]), int(i[7]), int(i[8]), abs(int(i[9])), int(i[10]))]
 
         imp = input("Melee> ")
@@ -151,15 +153,15 @@ while imp != "quit":
             mwh += [Weapon(int(i[6]), int(i[7]), int(i[8]), abs(int(i[9])), int(i[10]))]
 
 
-        FieldedUnits += [Unit(imp[:spacer].lower(), amount, rwh, mwh, int(m[4]), int(m[5][:-1]), int(m[8])) ]
+        fieldedUnits += [Unit(unitName.lower(), amount, rwh, mwh, int(m[4]), int(m[5][:-1]), int(m[8])) ]
         
     elif imp[:space].upper() == "ATTACK":
         imp = imp[space+1:]
-        
-        print("attack!!!")
+        si = imp.split()
+        fieldedUnits[int(si[0])-1].ranged(fieldedUnits[int(si[1])-1], verbose=True)
     else:
         print("could not understand command")
     imp = input("> ")
 
-for i in FieldedUnits:
+for i in fieldedUnits:
     print(i)
