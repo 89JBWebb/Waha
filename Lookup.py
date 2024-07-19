@@ -1,5 +1,6 @@
 import random as r
 
+
 def toWound(s,t):
     if s >= t*2:
         return 2
@@ -10,6 +11,7 @@ def toWound(s,t):
     elif s*2 <= t:
         return 6
     return 5
+
 
 class Unit:
 
@@ -39,10 +41,13 @@ class Unit:
         attacks = self.models*weapon.attacks
         hits = 0
         wounds = 0
+        rerollWounds = 0
         notSaved = 0
 
         if "verbose" in kwargs:
             print(weapon.BWS, end=": ")
+        if weapon.blast:
+            attacks += int(victim.models/5)
         for i in range(attacks):
             x = r.randint(1,6)
             if "verbose" in kwargs:
@@ -62,23 +67,41 @@ class Unit:
             x = r.randint(1,6)
             if "verbose" in kwargs:
                 print(x, end=" ")
-            if x >= toWound(weapon.strength, victim.toughness):
+            if x == 6 and weapon.devistatingWounds:
+                notSaved+=1
+            elif x >= toWound(weapon.strength, victim.toughness):
                 wounds+=1
+            elif weapon.twinLinked:
+                rerollWounds+=1
         if "verbose" in kwargs:
             print()
+
+        if rerollWounds != 0:
+            if "verbose" in kwargs:
+                print(toWound(weapon.strength, victim.toughness), end=": ")
+            for i in range(rerollWounds):
+                x = r.randint(1,6)
+                if "verbose" in kwargs:
+                    print(x, end=" ")
+                if x == 6 and weapon.devistatingWounds:
+                    notSaved+=1
+                elif x >= toWound(weapon.strength, victim.toughness):
+                    wounds+=1
+            if "verbose" in kwargs:
+                print()
+
         if "verbose" in kwargs:
-            print(victim.save-weapon.AP, end=": ")
+            print(victim.save+weapon.AP, end=": ")
         for i in range(wounds):
             x = r.randint(1,6)
             if "verbose" in kwargs:
                 print(x, end=" ")
-            if x < victim.save-weapon.AP:
+            if x < victim.save+weapon.AP:
                 notSaved+=1
         if "verbose" in kwargs:
             print()
 
         victim.allocate(weapon.damage, notSaved)
-
 
     def allocate(self, damage, times):
         for i in range(times):
@@ -90,6 +113,7 @@ class Unit:
     def __str__(self):
         return str(self.number)+" "+self.name+" "+str(self.models)
 
+
 class Weapon:
 
     def __init__(self, attacks, BWS, strength, AP, damage, kwargs):
@@ -98,14 +122,26 @@ class Weapon:
         self.strength = strength
         self.AP = AP
         self.damage = damage
-        if "lethalHits" not in kwargs:
+        if "lethal hits" not in kwargs:
             self.lethalHits = False
         else:
             self.lethalHits = True
-        if "sustainedHits" not in kwargs:
+        if "sustained hits" not in kwargs:
             self.sustainedHits = 0
         else:
             self.sustainedHits = 1
+        if "devastating wounds" not in kwargs:
+            self.devastatingWounds = False
+        else:
+            self.devastatingWounds = True
+        if "twin-linked" not in kwargs:
+            self.twinLinked = False
+        else:
+            self.twinLinked = True
+        if "blast" not in kwargs:
+            self.blast = False
+        else:
+            self.blast = True
 
 
 modelSheets = []
@@ -162,7 +198,6 @@ while imp != "quit":
         for h in meleeWeapons:
             i = potentialWeapons[int(h)-1]
             mwh += [Weapon(int(i[6]), int(i[7]), int(i[8]), abs(int(i[9])), int(i[10]), [i[3],i[4]])]
-
 
         fieldedUnits += [Unit(unitName.lower(), amount, rwh, mwh, int(m[4]), int(m[5][:-1]), int(m[8]))]
         
