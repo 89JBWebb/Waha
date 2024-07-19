@@ -27,11 +27,15 @@ class Unit:
         Unit.created+=1
         self.number = Unit.created
 
+    def melee(self, victim, **kwargs):
+        for w in self.meleeWeapons:
+            self.helper(w, victim, kwargs)
+
     def ranged(self, victim, **kwargs):
         for w in self.rangedWeapons:
-            self.rangedHelper(w, victim, kwargs)
+            self.helper(w, victim, kwargs)
 
-    def rangedHelper(self, weapon, victim, kwargs):
+    def helper(self, weapon, victim, kwargs):
         attacks = self.models*weapon.attacks
         hits = 0
         wounds = 0
@@ -88,7 +92,7 @@ class Unit:
 
 class Weapon:
 
-    def __init__(self, attacks, BWS, strength, AP, damage, **kwargs):
+    def __init__(self, attacks, BWS, strength, AP, damage, kwargs):
         self.attacks = attacks
         self.BWS = BWS
         self.strength = strength
@@ -101,7 +105,7 @@ class Weapon:
         if "sustainedHits" not in kwargs:
             self.sustainedHits = 0
         else:
-            self.sustainedHits = kwargs["sustainedHits"]
+            self.sustainedHits = 1
 
 
 modelSheets = []
@@ -143,22 +147,28 @@ while imp != "quit":
         for h in rangedWeapons:
             i = potentialWeapons[int(h)-1]
             print(i)
-            rwh += [Weapon(int(i[6]), int(i[7]), int(i[8]), abs(int(i[9])), int(i[10]))]
+            rwh += [Weapon(int(i[6]), int(i[7]), int(i[8]), abs(int(i[9])), int(i[10])), [i[3],i[4]]]
 
         imp = input("Melee> ")
         meleeWeapons = imp.split()
         mwh = []
         for h in meleeWeapons:
             i = potentialWeapons[int(h)-1]
-            mwh += [Weapon(int(i[6]), int(i[7]), int(i[8]), abs(int(i[9])), int(i[10]))]
+            mwh += [Weapon(int(i[6]), int(i[7]), int(i[8]), abs(int(i[9])), int(i[10])), [i[3],i[4]]]
 
 
         fieldedUnits += [Unit(unitName.lower(), amount, rwh, mwh, int(m[4]), int(m[5][:-1]), int(m[8])) ]
         
-    elif imp[:space].upper() == "ATTACK":
+    elif imp[:space].upper() == "RANGE":
         imp = imp[space+1:]
         si = imp.split()
         fieldedUnits[int(si[0])-1].ranged(fieldedUnits[int(si[1])-1], verbose=True)
+    
+    elif imp[:space].upper() == "MELEE":
+        imp = imp[space+1:]
+        si = imp.split()
+        fieldedUnits[int(si[0])-1].melee(fieldedUnits[int(si[1])-1], verbose=True)
+
     else:
         print("could not understand command")
     imp = input("> ")
