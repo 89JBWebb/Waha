@@ -121,7 +121,7 @@
 2112,1,Atomiser beam,,,Ranged,3,4,6,-2,1,
 2112,2,Reanimator’s claws,,,Melee,4,4,5,0,1,
 2114,1,Feeder mandibles,lethal hits,,Melee,6,5,2,0,1,
-2115,1,Doomsday blaster,blast,heavy,Ranged,4,4,14,-3,3
+2115,1,Doomsday blaster,blast,heavy,Ranged,d6+1,4,14,-3,3
 2115,2,Twin gauss flayer,lethal hits,twin-linked,Ranged,1,4,4,0,1
 2115,3,Doomstalker limbs,,,Melee,3,4,6,0,1,
 2116,1,Enmitic exterminator,heavy,rapid fire 6,<a href=""/wh40k10ed/the-rules/core-rules/#Sustained-Hits"">sustained hits 1</a>",36,Ranged,6,3,6,

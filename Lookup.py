@@ -12,6 +12,23 @@ def toWound(s,t):
         return 6
     return 5
 
+def roll(imp):
+    result = 0
+    if "D" in imp.upper():
+        d = imp.upper().find("D")
+        if d == 0:
+            rolls = 1
+        else:
+            rolls = int(imp[:d])
+        if "+" in imp:
+            plus = imp.find("+")
+            result += int(imp[plus+1:])
+            for i in range(rolls):
+                result += r.randint(1, int(imp[d+1:plus]))
+        else:
+            for i in range(rolls):
+                result += r.randint(1, int(imp[d+1:]))
+    return result
 
 class Unit:
 
@@ -38,28 +55,34 @@ class Unit:
             self.helper(w, victim, kwargs)
 
     def helper(self, weapon, victim, kwargs):
-        attacks = self.models*weapon.attacks
+        if isinstance(weapon.attacks, str):
+            for i in self.models:
+                attacks += roll(weapon.attacks)
+        else:
+            attacks = self.models*weapon.attacks
+    
         hits = 0
         wounds = 0
         rerollWounds = 0
         notSaved = 0
 
-        if "verbose" in kwargs:
-            print(weapon.BWS, end=": ")
         if weapon.blast:
             attacks += int(victim.models/5)
-        for i in range(attacks):
-            x = r.randint(1,6)
+        if not weapon.torrent:
             if "verbose" in kwargs:
-                print(x, end=" ")
-            if weapon.sustainedHits != 0 and x == 6:
-                hits+=1+weapon.sustainedHits
-            elif weapon.lethalHits and x == 6:
-                wounds+=1
-            elif x >= weapon.BWS:
-                hits+=1
-        if "verbose" in kwargs:
-            print()
+                print(weapon.BWS, end=": ")
+            for i in range(attacks):
+                x = r.randint(1,6)
+                if "verbose" in kwargs:
+                    print(x, end=" ")
+                if weapon.sustainedHits != 0 and x == 6:
+                    hits+=1+weapon.sustainedHits
+                elif weapon.lethalHits and x == 6:
+                    wounds+=1
+                elif x >= weapon.BWS:
+                    hits+=1
+            if "verbose" in kwargs:
+                print()
         
         if "verbose" in kwargs:
             print(toWound(weapon.strength, victim.toughness), end=": ")
@@ -67,7 +90,7 @@ class Unit:
             x = r.randint(1,6)
             if "verbose" in kwargs:
                 print(x, end=" ")
-            if x == 6 and weapon.devistatingWounds:
+            if x == 6 and weapon.devastatingWounds:
                 notSaved+=1
             elif x >= toWound(weapon.strength, victim.toughness):
                 wounds+=1
@@ -83,25 +106,32 @@ class Unit:
                 x = r.randint(1,6)
                 if "verbose" in kwargs:
                     print(x, end=" ")
-                if x == 6 and weapon.devistatingWounds:
+                if x == 6 and weapon.devastatingWounds:
                     notSaved+=1
                 elif x >= toWound(weapon.strength, victim.toughness):
                     wounds+=1
             if "verbose" in kwargs:
                 print()
 
-        if "verbose" in kwargs:
-            print(victim.save+weapon.AP, end=": ")
-        for i in range(wounds):
-            x = r.randint(1,6)
+        if victim.save+weapon.AP <= 6:
             if "verbose" in kwargs:
-                print(x, end=" ")
-            if x < victim.save+weapon.AP:
-                notSaved+=1
-        if "verbose" in kwargs:
-            print()
+                print(victim.save+weapon.AP, end=": ")
+            for i in range(wounds):
+                x = r.randint(1,6)
+                if "verbose" in kwargs:
+                    print(x, end=" ")
+                if x < victim.save+weapon.AP:
+                    notSaved+=1
+            if "verbose" in kwargs:
+                print()
+        else:
+            notSaved = wounds
 
-        victim.allocate(weapon.damage, notSaved)
+        if isinstance(weapon.damage,str):
+            for i in range(notSaved):
+                victim.allocate(roll(weapon.damage), 1)
+        else:
+            victim.allocate(weapon.damage, notSaved)
 
     def allocate(self, damage, times):
         for i in range(times):
@@ -142,6 +172,10 @@ class Weapon:
             self.blast = False
         else:
             self.blast = True
+        if "torrent" not in kwargs:
+            self.torrent = False
+        else:
+            self.torrent = True
 
 
 modelSheets = []
@@ -162,45 +196,64 @@ while imp != "quit":
         imp = imp[space+1:]
         spacer = imp.rfind(" ")
         amount = int(imp[spacer+1:])
+        found = False
         outputMessage = "could not find what youre looking for"
         id = -1
         unitName = imp[:spacer]
         for m in modelSheets:
             if m[2].upper() == imp[:spacer].upper():
                 outputMessage = m
+                found = True
                 id = int(m[0])
                 break
         print(outputMessage)
-        
-        potentialWeapons = []
-        for w in weaponSheets:
-            if w[0] == id:
-                potentialWeapons += [w]
-                print(w)
 
-        imp = input("Ranged> ")
-        while "E" in imp.upper():
-            print("please type a number")
+        if found:        
+            potentialWeapons = []
+            for w in weaponSheets:
+                if w[0] == id:
+                    potentialWeapons += [w]
+                    print(w)
+
             imp = input("Ranged> ")
-        rangedWeapons = imp.split()
-        rwh = []
-        for h in rangedWeapons:
-            i = potentialWeapons[int(h)-1]
-            print(i)
-            rwh += [Weapon(int(i[6]), int(i[7]), int(i[8]), abs(int(i[9])), int(i[10]), [i[3],i[4]])]
+            while "E" in imp.upper():
+                print("please type a number")
+                imp = input("Ranged> ")
+            rangedWeapons = imp.split()
+            rwh = []
+            for h in rangedWeapons:
+                i = potentialWeapons[int(h)-1]
+                if i[6].upper().find("D") != -1:
+                    a = i[6]
+                else:
+                    a = int(i[6])
+                if i[10].upper().find("D") != -1:
+                    a = i[10]
+                else:
+                    a = int(i[10])
+                rwh += [Weapon(a, int(i[7]), int(i[8]), abs(int(i[9])), int(i[10]), [i[3],i[4]])]
 
-        imp = input("Melee> ")
-        while "E" in imp.upper():
-            print("please type a number")
-            imp = input("Ranged> ")
-        meleeWeapons = imp.split()
-        mwh = []
-        for h in meleeWeapons:
-            i = potentialWeapons[int(h)-1]
-            mwh += [Weapon(int(i[6]), int(i[7]), int(i[8]), abs(int(i[9])), int(i[10]), [i[3],i[4]])]
+            imp = input("Melee> ")
+            while "E" in imp.upper():
+                print("please type a number")
+                imp = input("Ranged> ")
+            meleeWeapons = imp.split()
+            mwh = []
+            for h in meleeWeapons:
+                i = potentialWeapons[int(h)-1]
+                i = potentialWeapons[int(h)-1]
+                if i[6].upper().find("D") != -1:
+                    a = i[6]
+                else:
+                    a = int(i[6])
+                if i[10].upper().find("D") != -1:
+                    a = i[10]
+                else:
+                    a = int(i[10])
+                mwh += [Weapon(int(i[6]), int(i[7]), int(i[8]), abs(int(i[9])), int(i[10]), [i[3],i[4]])]
 
-        fieldedUnits += [Unit(unitName.lower(), amount, rwh, mwh, int(m[4]), int(m[5][:-1]), int(m[8]))]
-        
+            fieldedUnits += [Unit(unitName.lower(), amount, rwh, mwh, int(m[4]), int(m[5][:-1]), int(m[8]))]
+            
     elif imp[:space].upper() == "RANGE":
         imp = imp[space+1:]
         si = imp.split()
