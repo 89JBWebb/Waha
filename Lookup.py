@@ -268,6 +268,15 @@ while imp != "quit":
         for i in fieldedUnits:
             print(i)
 
+    elif imp[:space].upper() == "ROLL":
+        imp = imp[space+1:]
+        print(roll(imp))
+    
+    elif imp[:space].upper() == "DEAL":
+        imp = imp[space+1:]
+        si = imp.split()
+        fieldedUnits[int(si[0])-1].allocate(1, int(si[1]))
+
     else:
         print("could not understand command")
     imp = input("> ")
