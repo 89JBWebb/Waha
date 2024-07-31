@@ -1,0 +1,8 @@
+create aggressor squad 6
+3
+4
+create necron warriors 20
+1
+3
+range 1 2
+quit

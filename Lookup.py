@@ -1,18 +1,15 @@
 import random as r
 
 
-def toWound(s,t):
-    if s >= t*2:
-        return 2
-    elif s > t:
-        return 3
-    elif s == t:
-        return 4
-    elif s*2 <= t:
-        return 6
-    return 5
+def getInput():
+    try:
+        imp = input("> ")
+    except EOFError:
+        imp = input("> ")
+    return imp
 
-def roll(imp):
+
+def roll(imp, **kwargs):
     result = 0
     if "D" in imp.upper():
         d = imp.upper().find("D")
@@ -24,11 +21,30 @@ def roll(imp):
             plus = imp.find("+")
             result += int(imp[plus+1:])
             for i in range(rolls):
-                result += r.randint(1, int(imp[d+1:plus]))
+                x = r.randint(1, int(imp[d+1:plus]))
+                if "verbose" in kwargs:
+                    print(x, end=" ")
+                result += x
         else:
             for i in range(rolls):
-                result += r.randint(1, int(imp[d+1:]))
+                x = r.randint(1, int(imp[d+1:]))
+                if "verbose" in kwargs:
+                    print(x, end=" ")
+                result += x
     return result
+
+
+def toWound(s,t):
+    if s >= t*2:
+        return 2
+    elif s > t:
+        return 3
+    elif s == t:
+        return 4
+    elif s*2 <= t:
+        return 6
+    return 5
+
 
 def weaponify(i):
     if i[-5].upper().find("D") != -1:
@@ -69,9 +85,12 @@ class Unit:
             self.helper(w, victim, kwargs)
 
     def helper(self, weapon, victim, kwargs):
+        attacks = 0
         if isinstance(weapon.attacks, str):
-            for i in self.models:
-                attacks += roll(weapon.attacks)
+            if "verbose" in kwargs:
+                print("\ntacks " + weapon.attacks + ": ", end="")
+            for i in range(self.models):
+                attacks += roll(weapon.attacks, verbose = True)
         else:
             attacks = self.models*weapon.attacks
     
@@ -81,9 +100,10 @@ class Unit:
         notSaved = 0
 
         if weapon.blast:
-            attacks += int(victim.models/5)
+            attacks += int(victim.models/5)*self.models
         if not weapon.torrent:
             if "verbose" in kwargs:
+                print("\nto hit ", end="")
                 print(weapon.BWS, end=": ")
             for i in range(attacks):
                 x = r.randint(1,6)
@@ -99,6 +119,7 @@ class Unit:
                 print()
         
         if "verbose" in kwargs:
+            print("wounds ", end="")
             print(toWound(weapon.strength, victim.toughness), end=": ")
         for i in range(hits):
             x = r.randint(1,6)
@@ -115,6 +136,7 @@ class Unit:
 
         if rerollWounds != 0:
             if "verbose" in kwargs:
+                print("reroll wounds ", end="")
                 print(toWound(weapon.strength, victim.toughness), end=": ")
             for i in range(rerollWounds):
                 x = r.randint(1,6)
@@ -129,6 +151,7 @@ class Unit:
 
         if victim.save+weapon.AP <= 6:
             if "verbose" in kwargs:
+                print("saves  ", end="")
                 print(victim.save+weapon.AP, end=": ")
             for i in range(wounds):
                 x = r.randint(1,6)
@@ -206,7 +229,7 @@ with open("./Data/Datasheets_wargear.csv", "r", encoding="utf8") as f:
             weaponSheets[-1][0] = -1
 
 fieldedUnits = []
-imp = input("> ")
+imp = getInput()
 while imp != "quit":
     space = imp.find(" ")
     if imp[:space].upper() == "CREATE":
@@ -279,7 +302,7 @@ while imp != "quit":
 
     else:
         print("could not understand command")
-    imp = input("> ")
+    imp = getInput()
 
 for i in fieldedUnits:
     print(i)
