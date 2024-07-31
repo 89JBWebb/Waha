@@ -30,6 +30,20 @@ def roll(imp):
                 result += r.randint(1, int(imp[d+1:]))
     return result
 
+def weaponify(i):
+    if i[-5].upper().find("D") != -1:
+        a = i[-5]
+    else:
+        a = int(i[-5])
+    j = 5
+    kw = []
+    while i[j].upper() != "MELEE" and not i[j].isnumeric():
+        begin = i[j].find(">")
+        end = i[j].find("</")
+        kw+=[i[j][begin+1:end]]
+        j+=1
+    return Weapon(a, int(i[-4]), int(i[-3]), abs(int(i[-2])), int(i[-1]), kw)
+
 class Unit:
 
     created = 0
@@ -180,13 +194,16 @@ class Weapon:
 
 modelSheets = []
 weaponSheets = []
-with open("./Data/Necron Models.csv", "r", encoding="utf8") as f:
+with open("./Data/Datasheets_models.csv", "r", encoding="utf8") as f:
     for l in f.readlines():
         modelSheets+=[l.split(",")]
-with open("./Data/Necron Weapons.csv", "r", encoding="utf8") as f:
+with open("./Data/Datasheets_wargear.csv", "r", encoding="utf8") as f:
     for l in f.readlines():
         weaponSheets+=[l.split(",")]
-        weaponSheets[-1][0] = int(weaponSheets[-1][0])
+        try:
+            weaponSheets[-1][0] = int(weaponSheets[-1][0])
+        except:
+            weaponSheets[-1][0] = -1
 
 fieldedUnits = []
 imp = input("> ")
@@ -223,15 +240,7 @@ while imp != "quit":
             rwh = []
             for h in rangedWeapons:
                 i = potentialWeapons[int(h)-1]
-                if i[6].upper().find("D") != -1:
-                    a = i[6]
-                else:
-                    a = int(i[6])
-                if i[10].upper().find("D") != -1:
-                    a = i[10]
-                else:
-                    a = int(i[10])
-                rwh += [Weapon(a, int(i[7]), int(i[8]), abs(int(i[9])), int(i[10]), [i[3],i[4]])]
+                rwh += [weaponify(i)]
 
             imp = input("Melee> ")
             while "E" in imp.upper():
@@ -241,16 +250,7 @@ while imp != "quit":
             mwh = []
             for h in meleeWeapons:
                 i = potentialWeapons[int(h)-1]
-                i = potentialWeapons[int(h)-1]
-                if i[6].upper().find("D") != -1:
-                    a = i[6]
-                else:
-                    a = int(i[6])
-                if i[10].upper().find("D") != -1:
-                    a = i[10]
-                else:
-                    a = int(i[10])
-                mwh += [Weapon(int(i[6]), int(i[7]), int(i[8]), abs(int(i[9])), int(i[10]), [i[3],i[4]])]
+                mwh += [weaponify(i)]
 
             fieldedUnits += [Unit(unitName.lower(), amount, rwh, mwh, int(m[4]), int(m[5][:-1]), int(m[8]))]
             
