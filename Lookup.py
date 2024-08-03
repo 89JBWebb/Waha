@@ -169,6 +169,17 @@ class Unit:
                 victim.allocate(roll(weapon.damage), 1)
         else:
             victim.allocate(weapon.damage, notSaved)
+        
+        if weapon.hazardous:
+            if "verbose" in kwargs:
+                print("hazard 2+", end="")
+            for i in range(self.models):
+                x = r.randint(1,6)
+                if "verbose" in kwargs:
+                    print(x, end=" ")
+                if x == 1:
+                    self.pull()
+
 
     def allocate(self, damage, times):
         for i in range(times):
@@ -176,6 +187,10 @@ class Unit:
             if self.allocated <= 0:
                 self.models-=1
                 self.allocated = self.wounds
+    
+    def pull(self):
+        self.models-=1
+        self.allocated = self.wounds
 
     def __str__(self):
         return str(self.number)+" "+self.name+" "+str(self.models)
@@ -213,6 +228,10 @@ class Weapon:
             self.torrent = False
         else:
             self.torrent = True
+        if "hazardous" not in kwargs:
+            self.hazardous = False
+        else:
+            self.hazardous = True
 
 
 modelSheets = []
@@ -276,7 +295,7 @@ while imp != "quit":
                 mwh += [weaponify(i)]
 
             fieldedUnits += [Unit(unitName.lower(), amount, rwh, mwh, int(m[4]), int(m[5][:-1]), int(m[8]))]
-            
+
     elif imp[:space].upper() == "RANGE":
         imp = imp[space+1:]
         si = imp.split()
