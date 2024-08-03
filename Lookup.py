@@ -47,18 +47,20 @@ def toWound(s,t):
 
 
 def weaponify(i):
-    if i[-5].upper().find("D") != -1:
-        a = i[-5]
+    if i[-6].upper().find("D") != -1:
+        a = i[-6]
     else:
-        a = int(i[-5])
-    j = 5
+        a = int(i[-6])
+    if i[-2].upper().find("D") != -1:
+        b = i[-2]
+    else:
+        b = int(i[-2])
+    j = 4
     kw = []
     while i[j].upper() != "MELEE" and not i[j].isnumeric():
-        begin = i[j].find(">")
-        end = i[j].find("</")
-        kw+=[i[j][begin+1:end]]
+        kw+=[i[j].strip()]
         j+=1
-    return Weapon(a, int(i[-4]), int(i[-3]), abs(int(i[-2])), int(i[-1]), kw)
+    return Weapon(a, int(i[-5]), int(i[-4]), abs(int(i[-3])), b, kw)
 
 class Unit:
 
@@ -66,6 +68,7 @@ class Unit:
 
     def __init__(self, name, models, rangedWeapons, meleeWeapons, toughness, save, wounds):
         self.models = models
+        self.fullStrength = models
         self.rangedWeapons = rangedWeapons
         self.meleeWeapons = meleeWeapons
         self.toughness = toughness
@@ -172,13 +175,16 @@ class Unit:
         
         if weapon.hazardous:
             if "verbose" in kwargs:
-                print("hazard 2+", end="")
+                print("hazard 2: ", end="")
             for i in range(self.models):
                 x = r.randint(1,6)
                 if "verbose" in kwargs:
-                    print(x, end=" ")
+                    print(x)
                 if x == 1:
-                    self.pull()
+                    if self.fullStrength == 1:
+                        self.allocate(1, 3)
+                    else:
+                        self.pull()
 
 
     def allocate(self, damage, times):
@@ -193,7 +199,7 @@ class Unit:
         self.allocated = self.wounds
 
     def __str__(self):
-        return str(self.number)+" "+self.name+" "+str(self.models)
+        return str(self.number)+" "+self.name+" "+str(self.models)+" ("+str(self.allocated)+")"
 
 
 class Weapon:
@@ -236,10 +242,10 @@ class Weapon:
 
 modelSheets = []
 weaponSheets = []
-with open("./Data/Datasheets_models.csv", "r", encoding="utf8") as f:
+with open("./Data/Models.csv", "r", encoding="utf8") as f:
     for l in f.readlines():
         modelSheets+=[l.split(",")]
-with open("./Data/Datasheets_wargear.csv", "r", encoding="utf8") as f:
+with open("./Data/Weapons.csv", "r", encoding="utf8") as f:
     for l in f.readlines():
         weaponSheets+=[l.split(",")]
         try:

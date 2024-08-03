@@ -1,3 +1,0 @@
-1. add keywords to calculator
-2. attack calculations from the command line
-3. reuse created units
