@@ -1,0 +1,84 @@
+Necrons
+Hypercrypt Legion
+Strike Force (2000 Points)
+
+CHARACTERS
+
+Hexmark Destroyer (70 Points)
+• 1x Close combat weapon
+1x Enmitic disintegrator pistols
+
+Technomancer (85 Points)
+• 1x Staff of light
+
+The Silent King (420 Points)
+• 1x Szarekh
+• Warlord
+• 1x Sceptre of Eternal Glory
+1x Staff of Stars
+1x Weapons of the Final Triarch
+• 2x Triarchal Menhir
+• 2x Annihilator beam
+2x Armoured bulk
+
+BATTLELINE
+
+Immortals (75 Points)
+• 5x Immortal
+• 5x Close combat weapon
+5x Tesla carbine
+
+OTHER DATASHEETS
+
+Canoptek Spyders (75 Points)
+• 1x Automaton claws
+1x Fabricator Claw Array (Aura)
+1x Gloom Prism (Aura)
+2x Particle beamer
+
+Canoptek Wraiths (250 Points)
+• 6x Canoptek Wraith
+• 6x Particle caster
+6x Vicious claws
+
+Doomsday Ark (200 Points)
+• 1x Armoured bulk
+1x Doomsday cannon
+2x Gauss flayer array
+
+Doomsday Ark (200 Points)
+• 1x Armoured bulk
+1x Doomsday cannon
+2x Gauss flayer array
+
+Flayed Ones (60 Points)
+• 5x Flayed One
+• 5x Flayer claws
+
+Lokhust Destroyers (30 Points)
+• 1x Close combat weapon
+1x Gauss cannon
+
+Lokhust Destroyers (30 Points)
+• 1x Close combat weapon
+1x Gauss cannon
+
+Lokhust Destroyers (30 Points)
+• 1x Close combat weapon
+1x Gauss cannon
+
+Tesseract Vault (400 Points)
+• 1x Antimatter Meteor
+1x Cosmic Fire
+1x Time's Arrow
+1x Armoured bulk
+4x Tesla spheres
+
+Tomb Blades (75 Points)
+• 3x Tomb Blade
+• 3x Close combat weapon
+2x Particle beamer
+3x Shadowloom
+1x Twin tesla carbine
+
+Exported with App Version: v1.18.0 (41), Data Version: v434

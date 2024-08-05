@@ -1,0 +1,8 @@
+create lychguard 5
+
+2
+create assault intercessor squad 5
+1
+5
+range 2 1
+quit

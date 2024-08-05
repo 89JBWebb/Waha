@@ -51,16 +51,20 @@ def weaponify(i):
         a = i[-6]
     else:
         a = int(i[-6])
-    if i[-2].upper().find("D") != -1:
-        b = i[-2]
+    if i[-5] == "N/A":
+        b = -1
     else:
-        b = int(i[-2])
+        b = int(i[-5])
+    if i[-2].upper().find("D") != -1:
+        c = i[-2]
+    else:
+        c = int(i[-2])
     j = 4
     kw = []
     while i[j].upper() != "MELEE" and not i[j].isnumeric():
         kw+=[i[j].strip()]
         j+=1
-    return Weapon(a, int(i[-5]), int(i[-4]), abs(int(i[-3])), b, kw)
+    return Weapon(a, b, int(i[-4]), abs(int(i[-3])), c, kw)
 
 class Unit:
 
@@ -94,6 +98,7 @@ class Unit:
                 print("\ntacks " + weapon.attacks + ": ", end="")
             for i in range(self.models):
                 attacks += roll(weapon.attacks, verbose = True)
+            print()
         else:
             attacks = self.models*weapon.attacks
     
@@ -104,7 +109,7 @@ class Unit:
 
         if weapon.blast:
             attacks += int(victim.models/5)*self.models
-        if not weapon.torrent:
+        if not weapon.torrent and weapon.BWS >= 2:
             if "verbose" in kwargs:
                 print("\nto hit ", end="")
                 print(weapon.BWS, end=": ")
@@ -120,6 +125,8 @@ class Unit:
                     hits+=1
             if "verbose" in kwargs:
                 print()
+        else:
+            hits+=attacks
         
         if "verbose" in kwargs:
             print("wounds ", end="")
