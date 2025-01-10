@@ -1,0 +1,3 @@
+This is a library created by Jared Webb to simulate warhammer 40k shooting and melee attacks
+complete tests using:
+> Get-Content "./LookupTests/match1.txt" | python "Lookup.py"

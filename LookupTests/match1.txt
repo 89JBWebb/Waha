@@ -1,0 +1,9 @@
+create necron warriors 10
+1
+3
+create raptors 10
+7
+10
+range 1 2
+range 1 2
+quit
