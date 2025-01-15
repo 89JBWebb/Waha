@@ -42,9 +42,9 @@ class Unit:
         rerollWounds = 0
         notSaved = 0
 
-        if weapon.blast:
+        if "BLAST" in weapon.keys:
             attacks += int(victim.models/5)*self.models
-        if not weapon.torrent and weapon.BWS >= 2:
+        if not ("TORRENT" in weapon.keys) and weapon.BWS >= 2:
             if "verbose" in kwargs:
                 print("\nto hit ", end="")
                 print(weapon.BWS, end=": ")
@@ -52,9 +52,9 @@ class Unit:
                 x = r.randint(1,6)
                 if "verbose" in kwargs:
                     print(x, end=" ")
-                if weapon.sustainedHits != 0 and x == 6:
+                if "SUSTAINEDHITS" in weapon.keys and x == 6:
                     hits+=1+weapon.sustainedHits
-                elif weapon.lethalHits and x == 6:
+                elif "LETHALHITS" in weapon.keys and x == 6:
                     wounds+=1
                 elif x >= weapon.BWS:
                     hits+=1
@@ -70,11 +70,11 @@ class Unit:
             x = r.randint(1,6)
             if "verbose" in kwargs:
                 print(x, end=" ")
-            if x == 6 and weapon.devastatingWounds:
+            if x == 6 and "DEVASTATINGWOUNDS" in weapon.keys:
                 notSaved+=1
             elif x >= toWound(weapon.strength, victim.toughness):
                 wounds+=1
-            elif weapon.twinLinked:
+            elif "TWINLINKED"in weapon.keys:
                 rerollWounds+=1
         if "verbose" in kwargs:
             print()
@@ -87,7 +87,7 @@ class Unit:
                 x = r.randint(1,6)
                 if "verbose" in kwargs:
                     print(x, end=" ")
-                if x == 6 and weapon.devastatingWounds:
+                if x == 6 and "DEVASTATINGWOUNDS" in weapon.keys:
                     notSaved+=1
                 elif x >= toWound(weapon.strength, victim.toughness):
                     wounds+=1
@@ -115,7 +115,7 @@ class Unit:
         else:
             victim.allocate(weapon.damage, notSaved)
         
-        if weapon.hazardous:
+        if "HAZARDOUS" in weapon.keys:
             if "verbose" in kwargs:
                 print("hazard 2: ", end="")
             for i in range(self.models):

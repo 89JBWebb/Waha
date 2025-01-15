@@ -1,6 +1,6 @@
-create dreadnought 1
-4 8
-11
+create legionaries 5
+14
+17
 create necron warriors 20
 2
 3

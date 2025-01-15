@@ -4,5 +4,5 @@ create lychguard 5
 create assault intercessor squad 5
 1
 5
-melee 1 2
+range 2 1
 quit
