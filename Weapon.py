@@ -11,13 +11,13 @@ def weaponify(i):
         c = i[-2]
     else:
         c = int(i[-2])
-    j = 5
+
     kw = []
-    while i[j].upper() != "MELEE" and not i[j].isnumeric():
-        start = i[j].find(">")
-        stop = i[j].find("</")
-        kw+=[i[j][start+1:stop]]
-        j+=1
+    if len(i[5]) != 0:
+        for k in i[5].split(","):
+            start = k.find(">")
+            stop = k.find("</")
+            kw+=[k[start+1:stop].upper()]
     return Weapon(a, b, int(i[-4]), abs(int(i[-3])), c, kw)
 
 class Weapon:
@@ -28,31 +28,13 @@ class Weapon:
         self.strength = strength
         self.AP = AP
         self.damage = damage
-        if "lethal hits" not in kwargs:
-            self.lethalHits = False
-        else:
-            self.lethalHits = True
-        if "sustained hits" not in kwargs:
-            self.sustainedHits = 0
-        else:
-            self.sustainedHits = 1
-        if "devastating wounds" not in kwargs:
-            self.devastatingWounds = False
-        else:
-            self.devastatingWounds = True
-        if "twin-linked" not in kwargs:
-            self.twinLinked = False
-        else:
-            self.twinLinked = True
-        if "blast" not in kwargs:
-            self.blast = False
-        else:
-            self.blast = True
-        if "torrent" not in kwargs:
-            self.torrent = False
-        else:
-            self.torrent = True
-        if "hazardous" not in kwargs:
-            self.hazardous = False
-        else:
-            self.hazardous = True
+
+        self.keys = {}
+
+        for k in kwargs:
+            if any(char.isdigit() for char in k):
+                ls = k.rindex(' ')
+                self.keys[k[:ls]] = int(k[ls:])
+            else:
+                self.keys[k] = 1
+        print(self.keys)
