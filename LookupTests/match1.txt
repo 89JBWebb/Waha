@@ -1,9 +1,16 @@
-create necron warriors 10
-1
-3
-create raptors 10
+create raptors 20
 7
 10
-range 1 2
-range 1 2
+create raptors 5
+7
+10
+create warp talons 10
+
+1
+create Heretic Astartes Daemon Prince 1
+1
+2
+create Chaos Lord 1
+3
+6
 quit
