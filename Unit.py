@@ -52,9 +52,9 @@ class Unit:
                 x = r.randint(1,6)
                 if "verbose" in kwargs:
                     print(x, end=" ")
-                if "SUSTAINEDHITS" in weapon.keys and x == 6:
+                if "SUSTAINED HITS" in weapon.keys and x == 6:
                     hits+=1+weapon.sustainedHits
-                elif "LETHALHITS" in weapon.keys and x == 6:
+                elif "LETHAL HITS" in weapon.keys and x == 6:
                     wounds+=1
                 elif x >= weapon.BWS:
                     hits+=1
@@ -70,11 +70,11 @@ class Unit:
             x = r.randint(1,6)
             if "verbose" in kwargs:
                 print(x, end=" ")
-            if x == 6 and "DEVASTATINGWOUNDS" in weapon.keys:
+            if x == 6 and "DEVASTATING WOUNDS" in weapon.keys:
                 notSaved+=1
             elif x >= toWound(weapon.strength, victim.toughness):
                 wounds+=1
-            elif "TWINLINKED"in weapon.keys:
+            elif "TWIN-LINKED"in weapon.keys:
                 rerollWounds+=1
         if "verbose" in kwargs:
             print()
@@ -87,7 +87,7 @@ class Unit:
                 x = r.randint(1,6)
                 if "verbose" in kwargs:
                     print(x, end=" ")
-                if x == 6 and "DEVASTATINGWOUNDS" in weapon.keys:
+                if x == 6 and "DEVASTATING WOUNDS" in weapon.keys:
                     notSaved+=1
                 elif x >= toWound(weapon.strength, victim.toughness):
                     wounds+=1

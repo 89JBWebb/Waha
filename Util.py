@@ -44,3 +44,28 @@ def toWound(s,t):
     elif s*2 <= t:
         return 6
     return 5
+
+def avg(x):
+    if type(x) == int:
+        return x
+    if "D" in x.upper():
+        result = 0
+        d = x.upper().find("D")
+        plus = x.find("+")
+
+        if plus == -1:
+            c = 0
+            plus = len(x)
+        else:
+            c = int(x[plus+1:])
+
+        if d == 0:
+            a = 1
+        else:
+            a = int(x[:d])
+
+        b = int(x[d+1:plus])
+
+        return a*(b+1)/2+c
+
+    return x
