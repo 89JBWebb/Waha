@@ -38,6 +38,7 @@ class Unit:
             attacks = self.models*weapon.attacks
     
         hits = 0
+        rerollHits = 0
         wounds = 0
         rerollWounds = 0
         notSaved = 0
@@ -58,10 +59,33 @@ class Unit:
                     wounds+=1
                 elif x >= weapon.BWS:
                     hits+=1
+                elif x < weapon.BWS and "RE-ROLL TO HIT" in weapon.keys:
+                    rerollHits+=1
+
             if "verbose" in kwargs:
                 print()
         else:
             hits+=attacks
+
+        if rerollHits != 0:
+            if "verbose" in kwargs:
+                print("rr hit ", end="")
+                print(weapon.BWS, end=": ")
+            for i in range(rerollHits):
+                x = r.randint(1,6)
+                if "verbose" in kwargs:
+                    print(x, end=" ")
+                if x == 6:
+                    if "SUSTAINED HITS" in weapon.keys and x == 6:
+                        hits+=1+weapon.sustainedHits
+                    if "LETHAL HITS" in weapon.keys and x == 6:
+                        wounds+=1
+                    else:
+                        hits+=1
+                elif x >= weapon.BWS:
+                    hits+=1
+            if "verbose" in kwargs:
+                print()
         
         if "verbose" in kwargs:
             print("wounds ", end="")
@@ -141,6 +165,12 @@ class Unit:
     def pull(self):
         self.models-=1
         self.allocated = self.wounds
+
+    def addKW(self, kw, weap):
+        if weap <= len(self.rangedWeapons):
+            self.rangedWeapons[weap-1].addKW(kw)
+        else:
+            self.meleeWeapons[weap-len(self.rangedWeapons)-1].addKW(kw)
 
     def __str__(self):
         return str(self.number)+" "+self.name+" "+str(self.models)+" ("+str(self.allocated)+")"

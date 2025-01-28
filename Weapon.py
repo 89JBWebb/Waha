@@ -53,6 +53,8 @@ class Weapon:
         if "LETHAL HITS" in self.keys:
             result -= b * c
             result += 6 * c
+        if "SUSTAINED HITS" in self.keys:
+            result += self.keys["SUSTAINED HITS"] * b * c
         if "DEVASTATING WOUNDS" in self.keys:
             result -= a * c
             result += 6 * a
@@ -63,5 +65,8 @@ class Weapon:
     def wscore(self, T, SV, W):
         return round(self.score(T, SV)/216.0 * avg(self.attacks) * min(avg(self.damage), W), 2)
     
+    def addKW(self, kw):
+        self.keys[kw] = 1
+
     def __str__(self):
         return self.name + "\t" + str(self.attacks) + "\t" + str(self.BWS) + "\t" + str(self.strength) + "\t" + str(self.AP) + "\t" + str(self.damage) + "\t" + str(self.keys)

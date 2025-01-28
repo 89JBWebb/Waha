@@ -1,0 +1,10 @@
+create necron warriors 20
+1
+3
+create raptors 5
+3
+6
+range 2 1
+add RE-ROLL TO HIT 2 1
+range 2 1
+quit

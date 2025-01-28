@@ -86,6 +86,14 @@ while imp != "quit":
         imp = imp[space+1:]
         si = imp.split()
         fieldedUnits[int(si[0])-1].allocate(1, int(si[1]))
+    
+    elif imp[:space].upper() == "ADD":
+        imp = imp[space+1:]
+        kw, unit, weap = imp.rsplit(' ', 2)
+        unit = int(unit)
+        weap = int(weap)
+        fieldedUnits[unit-1].addKW(kw, weap)
+        print(0)
 
     else:
         print("could not understand command")
