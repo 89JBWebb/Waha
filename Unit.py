@@ -37,6 +37,11 @@ class Unit:
         else:
             attacks = self.models*weapon.attacks
     
+        if "5+ CRITS" in weapon.keys:
+            c = 5
+        else:
+            c = 6
+
         hits = 0
         rerollHits = 0
         wounds = 0
@@ -53,13 +58,15 @@ class Unit:
                 x = r.randint(1,6)
                 if "verbose" in kwargs:
                     print(x, end=" ")
-                if "SUSTAINED HITS" in weapon.keys and x == 6:
-                    hits+=1+weapon.sustainedHits
-                elif "LETHAL HITS" in weapon.keys and x == 6:
+                if "SUSTAINED HITS" in weapon.keys and x >= c:
+                    hits+=weapon.keys["SUSTAINED HITS"]+1
+                elif "LETHAL HITS" in weapon.keys and x >= c:
                     wounds+=1
                 elif x >= weapon.BWS:
                     hits+=1
                 elif x < weapon.BWS and "RE-ROLL TO HIT" in weapon.keys:
+                    rerollHits+=1
+                elif x == 1 and "RE-ROLL TO HIT 1S" in weapon.keys:
                     rerollHits+=1
 
             if "verbose" in kwargs:
@@ -76,9 +83,9 @@ class Unit:
                 if "verbose" in kwargs:
                     print(x, end=" ")
                 if x == 6:
-                    if "SUSTAINED HITS" in weapon.keys and x == 6:
-                        hits+=1+weapon.sustainedHits
-                    if "LETHAL HITS" in weapon.keys and x == 6:
+                    if "SUSTAINED HITS" in weapon.keys and x >= c:
+                        hits+=1+weapon.keys["SUSTAINED HITS"]
+                    if "LETHAL HITS" in weapon.keys and x >= c:
                         wounds+=1
                     else:
                         hits+=1
@@ -99,6 +106,8 @@ class Unit:
             elif x >= toWound(weapon.strength, victim.toughness):
                 wounds+=1
             elif "TWIN-LINKED"in weapon.keys:
+                rerollWounds+=1
+            elif "TWIN-LINKED 1S"in weapon.keys and x == 1:
                 rerollWounds+=1
         if "verbose" in kwargs:
             print()
@@ -171,6 +180,16 @@ class Unit:
             self.rangedWeapons[weap-1].addKW(kw)
         else:
             self.meleeWeapons[weap-len(self.rangedWeapons)-1].addKW(kw)
+
+    def wscore(self, mode, t, sv, inv, w):
+        result = 0
+        if mode == 0:
+            weps = self.rangedWeapons
+        else:
+            weps = self.meleeWeapons
+        for wep in weps:
+            result += wep.wscore(t, sv, inv, w) * self.models
+        return result
 
     def __str__(self):
         return str(self.number)+" "+self.name+" "+str(self.models)+" ("+str(self.allocated)+")"

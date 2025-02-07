@@ -45,11 +45,10 @@ def toWound(s,t):
         return 6
     return 5
 
-def avg(x):
+def aver(x):
     if type(x) == int:
         return x
     if "D" in x.upper():
-        result = 0
         d = x.upper().find("D")
         plus = x.find("+")
 
@@ -65,6 +64,8 @@ def avg(x):
             a = int(x[:d])
 
         b = int(x[d+1:plus])
+
+        result = a*(b+1)/2+c
 
         return a*(b+1)/2+c
 

@@ -1,4 +1,4 @@
-from Util import avg, toWound
+from Util import aver, toWound
 
 def weaponify(i):
     if i[-6].upper().find("D") != -1:
@@ -41,14 +41,14 @@ class Weapon:
         for k in kwargs:
             if any(char.isdigit() for char in k):
                 ls = k.rindex(' ')
-                self.keys[k[:ls]] = k[ls:]
+                self.keys[k[:ls]] = int(k[ls:])
             else:
                 self.keys[k] = 1
     
-    def score(self, T, SV):
+    def score(self, T, SV, INV):
         a = 7-self.BWS
         b = 7-toWound(self.strength, T)
-        c = min(7-SV+self.AP,6)
+        c = min(SV+self.AP-1, 6, INV)
         result = a * b * c
         if "LETHAL HITS" in self.keys:
             result -= b * c
@@ -60,11 +60,12 @@ class Weapon:
             result += 6 * a
         if "TWIN-LINKED" in self.keys:
             result += (6-b)*b*a*c/6
-        return round(result,1)
+        return result
     
-    def wscore(self, T, SV, W):
-        return round(self.score(T, SV)/216.0 * avg(self.attacks) * min(avg(self.damage), W), 2)
-    
+    def wscore(self, T, SV, INV, W):
+        result = self.score(T, SV, INV)/216.0 * aver(self.attacks) * min(aver(self.damage), W)
+        return result
+
     def addKW(self, kw):
         self.keys[kw] = 1
 

@@ -90,10 +90,21 @@ while imp != "quit":
     elif imp[:space].upper() == "ADD":
         imp = imp[space+1:]
         kw, unit, weap = imp.rsplit(' ', 2)
-        unit = int(unit)
-        weap = int(weap)
-        fieldedUnits[unit-1].addKW(kw, weap)
+        unit = int(unit)-1
+        weap = int(weap)-1
+        fieldedUnits[unit].addKW(kw, weap)
         print(0)
+
+    elif imp[:space].upper() == "COUNTER":
+        imp = imp[space+1:]
+        t, sv, inv, w = imp.rsplit(' ', 3)
+        t = int(t)
+        sv = int(sv)
+        inv = int(inv)
+        w = int(w)
+        for u in fieldedUnits:
+            print(u.name + " (r)\t"+ str(u.wscore(0, t, sv, inv, w)))
+            print(u.name + " (m)\t"+ str(u.wscore(1, t, sv, inv, w)))
 
     else:
         print("could not understand command")
