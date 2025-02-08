@@ -1,13 +1,30 @@
 #defines utility methods to be used otherwhere in the project
-
 import random as r
+import sys
 
 def getInput():
+    """
+    Get input from either file or command line.
+    Switches to command line input when file input ends.
+    """
     try:
-        imp = input("> ")
+        # Try to get input from current source (file or stdin)
+        line = input("> ")
+        return line
     except EOFError:
-        imp = input("> ")
-    return imp
+        # If we hit EOF and stdin is not interactive (i.e., reading from file)
+        if not sys.stdin.isatty():
+            # Restore stdin to terminal
+            sys.stdin = open('/dev/tty') if sys.platform != 'win32' else open('CONIN$')
+            print("\nSwitched to command line input. Type 'exit' to quit.")
+            return getInput()  # Recursively try to get input again
+        else:
+            # If we hit EOF in interactive mode, exit
+            print("\nExiting...")
+            return None
+    except KeyboardInterrupt:
+        print("\nKeyboard interrupt detected. Exiting...")
+        return None
 
 
 def roll(imp, **kwargs):

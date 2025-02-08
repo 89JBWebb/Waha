@@ -1,0 +1,63 @@
+create Catacomb Command Barge 1
+1
+5
+add TWIN-LINKED 1S 1 1
+add TWIN-LINKED 1S 1 2
+add RE-ROLL TO HIT 1S 1 1
+add RE-ROLL TO HIT 1S 1 2
+create Overlord 1
+
+5
+add +1 TO HIT 2 2
+create Plasmancer 1
+1
+2
+add +1 TO HIT 3 1
+add +1 TO HIT 3 2
+create Skorpekh Lord 1
+1
+3
+add +1 TO HIT 4 1
+add +1 TO HIT 4 2
+add LETHAL HITS 4 2
+create Immortals 10
+2
+3
+add TWIN-LINKED 1S 5 1 
+add 5+ CRITS 5 1
+add +1 TO HIT 5 1
+add +1 TO HIT 5 2
+create Lychguard 5
+
+1
+add +1 TO HIT 6 2
+add RE-ROLL TO HIT 1S 6 2
+add TWIN-LINKED 1S 6 2
+create Skorpekh Destroyers 3
+
+1
+add +1 TO HIT 7 2
+add LETHAL HITS 7 2
+add TWIN-LINKED 1S 7 2
+add DEVASTATING WOUNDS 7 2
+create Lokhust Heavy Destroyers 1
+1
+3
+add TWIN-LINKED 1S 8 1
+create Lokhust Heavy Destroyers 1
+2
+3
+add TWIN-LINKED 1S 9 1
+create Doomsday Ark 1
+1 2
+3
+add DEVASTATING WOUNDS 10 1
+create Tomb Blades 3
+1
+4
+create Tomb Blades 3
+2
+4
+create Tomb Blades 3
+3
+4

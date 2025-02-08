@@ -49,17 +49,33 @@ class Weapon:
         a = 7-self.BWS
         b = 7-toWound(self.strength, T)
         c = min(SV+self.AP-1, 6, INV)
+        ac = 1
+        bc = 1
+        if "+1 TO HIT" in self.keys and a < 5:
+            a += 1
+        if "HEAVY" in self.keys and a < 5:
+            a += 1
+        if "5+ CRITS" in self.keys:
+            ac += 1
+        if "RE-ROLL TO HIT" in self.keys:
+            a  += a  * (6-b) / 6
+            ac += ac * (6-b) / 6
+        elif "RE-ROLL 1S TO HIT" in self.keys:
+            a  += a  / 6
+            ac += ac / 6
+        if "TWIN-LINKED" in self.keys:
+            b  += b  * (6-c) / 6
+            bc += bc * (6-c) / 6
+        elif "TWIN-LINKED 1S" in self.keys:
+            b  += b  / 6
+            bc += bc / 6
+        if "SUSTAINED HITS" in self.keys:
+            a += self.keys["SUSTAINED HITS"] * ac
         result = a * b * c
         if "LETHAL HITS" in self.keys:
-            result -= b * c
-            result += 6 * c
-        if "SUSTAINED HITS" in self.keys:
-            result += self.keys["SUSTAINED HITS"] * b * c
+            result += (6 - b) * ac * c
         if "DEVASTATING WOUNDS" in self.keys:
-            result -= a * c
-            result += 6 * a
-        if "TWIN-LINKED" in self.keys:
-            result += (6-b)*b*a*c/6
+            result += (6 - c) * bc * a
         return result
     
     def wscore(self, T, SV, INV, W):

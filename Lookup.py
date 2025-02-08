@@ -88,8 +88,11 @@ while imp != "quit":
         fieldedUnits[int(si[0])-1].allocate(1, int(si[1]))
     
     elif imp[:space].upper() == "ADD":
-        imp = imp[space+1:]
+        imp = imp[space+1:].strip()
         kw, unit, weap = imp.rsplit(' ', 2)
+        print(kw)
+        print(unit)
+        print(weap)
         unit = int(unit)-1
         weap = int(weap)-1
         fieldedUnits[unit].addKW(kw, weap)
@@ -103,8 +106,10 @@ while imp != "quit":
         inv = int(inv)
         w = int(w)
         for u in fieldedUnits:
-            print(u.name + " (r)\t"+ str(u.wscore(0, t, sv, inv, w)))
-            print(u.name + " (m)\t"+ str(u.wscore(1, t, sv, inv, w)))
+            if len(u.rangedWeapons) > 0:
+                print(u.name + "\t" + u.rangedWeapons[0].name + " (r)\t"+ str(u.wscore(0, t, sv, inv, w)))
+            if len(u.meleeWeapons) > 0:
+                print(u.name + "\t" + u.meleeWeapons[0].name + " (m)\t"+ str(u.wscore(1, t, sv, inv, w)))
 
     else:
         print("could not understand command")

@@ -48,12 +48,17 @@ class Unit:
         rerollWounds = 0
         notSaved = 0
 
+        target =  weapon.BWS
+        if "+1 TO HIT" in weapon.keys and target > 2:
+            target -= 1
+        if "HEAVY" in weapon.keys and target > 2:
+            target -= 1
         if "BLAST" in weapon.keys:
             attacks += int(victim.models/5)*self.models
         if not ("TORRENT" in weapon.keys) and weapon.BWS >= 2:
             if "verbose" in kwargs:
                 print("\nto hit ", end="")
-                print(weapon.BWS, end=": ")
+                print(target, end=": ")
             for i in range(attacks):
                 x = r.randint(1,6)
                 if "verbose" in kwargs:
@@ -62,9 +67,9 @@ class Unit:
                     hits+=weapon.keys["SUSTAINED HITS"]+1
                 elif "LETHAL HITS" in weapon.keys and x >= c:
                     wounds+=1
-                elif x >= weapon.BWS:
+                elif x >= target:
                     hits+=1
-                elif x < weapon.BWS and "RE-ROLL TO HIT" in weapon.keys:
+                elif x < target and "RE-ROLL TO HIT" in weapon.keys:
                     rerollHits+=1
                 elif x == 1 and "RE-ROLL TO HIT 1S" in weapon.keys:
                     rerollHits+=1
@@ -89,7 +94,7 @@ class Unit:
                         wounds+=1
                     else:
                         hits+=1
-                elif x >= weapon.BWS:
+                elif x >= target:
                     hits+=1
             if "verbose" in kwargs:
                 print()
